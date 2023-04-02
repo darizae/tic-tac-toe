@@ -1,0 +1,39 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+.flex-centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+#header {
+  flex-basis: 1/6;
+  background-color: #c5e1a5;
+}
+
+#config {
+  flex-basis: 2/6;
+  background-color: #b0bec5;
+  flex-direction: column;
+}
+
+#config-choice {
+  flex-direction: row;
+  gap: 10px;
+}
+
+#game-board {
+  flex-grow: 1;
+  background-color: #ef9a9a;
+}
+
