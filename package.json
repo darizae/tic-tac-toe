@@ -1,0 +1,30 @@
+{
+  "name": "tic-tac-toe",
+  "version": "1.0.0",
+  "description": "Part of the The Odin Project's Fullstack JavaScript Developer course",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/darizae/tic-tac-toe.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/darizae/tic-tac-toe/issues"
+  },
+  "homepage": "https://github.com/darizae/tic-tac-toe#readme",
+  "dependencies": {
+    "save-dev": "^0.0.1-security"
+  },
+  "devDependencies": {
+    "eslint": "^8.37.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^15.7.0",
+    "eslint-plugin-promise": "^6.1.1"
+  }
+}
