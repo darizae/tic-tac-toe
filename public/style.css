@@ -32,8 +32,28 @@ body {
   gap: 10px;
 }
 
+#game {
+    flex-grow: 1;
+}
+
 #game-board {
-  flex-grow: 1;
-  background-color: #ef9a9a;
+    background-color: bisque;
+    height: 800px;
+    width: 800px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 2px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 
+              0 2px 2px rgba(0, 0, 0, 0.15), 
+              0 4px 4px rgba(0, 0, 0, 0.15), 
+              0 8px 8px rgba(0, 0, 0, 0.15);
+}
+
+#game-board div {
+    background-color: #fff;
+    border-radius: 5px;
+    border: none; 
+    padding: 0; 
 }
 
