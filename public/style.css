@@ -53,10 +53,12 @@ h1, h2 {
 #config-choice {
   flex-direction: row;
   gap: 10px;
+  margin-bottom: 10px;
 }
 
 #game {
     flex-grow: 1;
+    padding: 20px;
 }
 
 #game-board {
