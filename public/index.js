@@ -28,6 +28,7 @@ function replaceConfigChoice() {
   const player1Label = document.createElement('label');
   player1Label.innerText = 'Player 1 (X)';
   const player1Input = document.createElement('input');
+  player1Input.required = true;
   player1Input.type = 'text';
   player1Input.name = 'player1';
 
@@ -35,20 +36,24 @@ function replaceConfigChoice() {
   const player2Label = document.createElement('label');
   player2Label.innerText = 'Player 2 (O)';
   const player2Input = document.createElement('input');
+  player2Input.required = true;
   player2Input.type = 'text';
   player2Input.name = 'player2';
 
   // Create the 'Go Back' button
   const goBackButton = document.createElement('button');
+  goBackButton.setAttribute('id', 'go-back');
   goBackButton.innerText = 'Go Back';
   goBackButton.addEventListener('click', () => {
     // Remove the form and add the buttons back
     configChoiceDiv.removeChild(form);
+    changeTitle(defaultTitle);
     addConfigChoiceButtons();
   });
 
   // Create the 'Start Game' button
   const startGameButton = document.createElement('button');
+  startGameButton.setAttribute('id', 'start-game');
   startGameButton.type = 'submit';
   startGameButton.innerText = 'Start Game';
 
