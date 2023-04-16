@@ -1,5 +1,2 @@
-- Review modules and factories in JS
-- Set plan for how to use them to run and store a game
-
-Start game button
-- Set up game logic
+- Fix checking for win logic in that for loop with the combos
+-> have to use data-number attribute of the spotDivs for checking
