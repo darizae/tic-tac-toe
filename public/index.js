@@ -76,3 +76,52 @@ function addConfigChoiceButtons() {
   configChoiceDiv.appendChild(againstPlayerBtn);
   configChoiceDiv.appendChild(againstMachineBtn);
 }
+
+function createMarkSpan(parentDiv, mark) {
+  const parentDivWidth = parentDiv.offsetWidth;
+  const parentDivHeight = parentDiv.offsetHeight;
+  const fontSize = Math.min(parentDivWidth, parentDivHeight) * 0.8;
+
+  const span = document.createElement('span');
+  span.textContent = mark;
+  span.classList.add('mark');
+  span.classList.add(`${mark.toLowerCase()}-mark`);
+  span.style.fontSize = `${fontSize}px`;
+
+  return span;
+}
+
+const Spot = (spotDiv) => {
+  const getSpotDiv = () => spotDiv;
+  let isChecked = false;
+
+  const mark = (text) => {
+    if (isChecked) return;
+    spotDiv.appendChild(createMarkSpan(spotDiv, text));
+    isChecked = true;
+  };
+
+  const markX = () => mark('X');
+
+  const markO = () => mark('O');
+
+  return {
+    getSpotDiv, isChecked, markX, markO,
+  };
+};
+
+function getSpotDivs() {
+  const spotDivs = Array.from(document.querySelectorAll('div.spot'));
+  const spots = [];
+
+  spotDivs.forEach((spotDiv) => {
+    spotDiv.classList.add('flex-centered');
+    const spot = Spot(spotDiv);
+    spots.push(spot);
+  });
+
+  return spots;
+}
+
+const spots = getSpotDivs();
+spots[0].markX();

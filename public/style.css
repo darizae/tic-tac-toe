@@ -106,3 +106,20 @@ button:hover {
   background-color: darkgreen;
 }
 
+.mark {
+  font-family: "Arial", sans-serif;
+  font-weight: bold;
+}
+
+.x-mark {
+  color: darkred;
+}
+
+.o-mark {
+  font-family: "Arial", sans-serif;
+  font-weight: bold;
+  color: darkblue;
+}
+
+
+
