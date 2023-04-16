@@ -116,12 +116,20 @@ function getSpotDivs() {
 
   spotDivs.forEach((spotDiv) => {
     spotDiv.classList.add('flex-centered');
+
     const spot = Spot(spotDiv);
+    spotDiv.addEventListener('click', () => spot.markX());
+
     spots.push(spot);
   });
 
   return spots;
 }
 
-const spots = getSpotDivs();
-spots[0].markX();
+const gameBoard = (() => {
+  const spots = getSpotDivs();
+})();
+
+const game = (() => {
+  const turnCounter = 0;
+})();

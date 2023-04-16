@@ -109,6 +109,7 @@ button:hover {
 .mark {
   font-family: "Arial", sans-serif;
   font-weight: bold;
+  user-select: none;
 }
 
 .x-mark {
@@ -116,8 +117,6 @@ button:hover {
 }
 
 .o-mark {
-  font-family: "Arial", sans-serif;
-  font-weight: bold;
   color: darkblue;
 }
 
