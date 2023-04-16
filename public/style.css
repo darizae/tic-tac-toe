@@ -63,8 +63,8 @@ button:hover {
 
 #game-board {
     background-color: bisque;
-    height: 800px;
-    width: 800px;
+    height: 600px;
+    width: 600px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);

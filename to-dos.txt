@@ -1,8 +1,5 @@
-Functionality of against another player button
-- Change h2 to 'Enter your names'
-- two inputs with labels for players 1 and 2
-- Submit that should start game
-- Go back button to go back to choosing
+- Review modules and factories in JS
+- Set plan for how to use them to run and store a game
 
 Start game button
 - Set up game logic
