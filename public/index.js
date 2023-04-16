@@ -1,3 +1,4 @@
+/* eslint-disable no-plusplus */
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-alert */
 const configChoiceDiv = document.getElementById('config-choice');
@@ -77,6 +78,13 @@ function addConfigChoiceButtons() {
   configChoiceDiv.appendChild(againstMachineBtn);
 }
 
+const Player = (name, mark) => {
+  const getName = () => name;
+  const getMark = () => mark;
+
+  return { getName, getMark };
+};
+
 function createMarkSpan(parentDiv, mark) {
   const parentDivWidth = parentDiv.offsetWidth;
   const parentDivHeight = parentDiv.offsetHeight;
@@ -95,19 +103,14 @@ const Spot = (spotDiv) => {
   const getSpotDiv = () => spotDiv;
   let isChecked = false;
 
-  const mark = (text) => {
-    if (isChecked) return;
-    spotDiv.appendChild(createMarkSpan(spotDiv, text));
+  const mark = (markSign) => {
+    if (isChecked) return false;
+    spotDiv.appendChild(createMarkSpan(spotDiv, markSign));
     isChecked = true;
+    return true;
   };
 
-  const markX = () => mark('X');
-
-  const markO = () => mark('O');
-
-  return {
-    getSpotDiv, isChecked, markX, markO,
-  };
+  return { getSpotDiv, isChecked, mark };
 };
 
 function getSpotDivs() {
@@ -116,10 +119,7 @@ function getSpotDivs() {
 
   spotDivs.forEach((spotDiv) => {
     spotDiv.classList.add('flex-centered');
-
     const spot = Spot(spotDiv);
-    spotDiv.addEventListener('click', () => spot.markX());
-
     spots.push(spot);
   });
 
@@ -130,6 +130,37 @@ const gameBoard = (() => {
   const spots = getSpotDivs();
 })();
 
+const player1Mark = 'X';
+const player2Mark = 'O';
+
 const game = (() => {
-  const turnCounter = 0;
+  let turnCounter = 1;
+  const spots = getSpotDivs();
+
+  const player1 = Player('player1', player1Mark);
+  const player2 = Player('player2', player2Mark);
+  let currentPlayer = player1;
+
+  let played = false;
+  let gameLoopId;
+
+  spots.forEach((spot) => spot.getSpotDiv().addEventListener('click', () => {
+    played = spot.mark(currentPlayer.getMark());
+  }));
+
+  function gameLoop() {
+    if (played === true) {
+      turnCounter++;
+      played = false;
+      currentPlayer = turnCounter % 2 === 0 ? player2 : player1;
+    }
+
+    if (turnCounter < 10) {
+      gameLoopId = setTimeout(gameLoop, 0);
+    } else {
+      clearTimeout(gameLoopId);
+    }
+  }
+
+  gameLoop();
 })();
