@@ -5,7 +5,7 @@
     "eslint.validate": [
         "javascript"
     ],
-    "window.zoomLevel": 2,
+    "window.zoomLevel": 1,
     "cSpell.words": [
         "Divs"
     ]

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-plusplus */
 /* eslint-disable no-use-before-define */
@@ -46,18 +47,25 @@ function replaceConfigChoice() {
   const goBackButton = document.createElement('button');
   goBackButton.setAttribute('id', 'go-back');
   goBackButton.innerText = 'Go Back';
-  goBackButton.addEventListener('click', () => {
-    // Remove the form and add the buttons back
-    configChoiceDiv.removeChild(form);
-    changeTitle(defaultTitle);
-    addConfigChoiceButtons();
-  });
+  goBackButton.addEventListener('click', () => removeForm);
 
   // Create the 'Start Game' button
   const startGameButton = document.createElement('button');
   startGameButton.setAttribute('id', 'start-game');
   startGameButton.type = 'submit';
   startGameButton.innerText = 'Start Game';
+  startGameButton.addEventListener('click', (event) => {
+    event.preventDefault();
+    removeForm();
+    game.startGame();
+  });
+
+  const removeForm = () => {
+    // Remove the form and add the buttons back
+    configChoiceDiv.removeChild(form);
+    changeTitle(defaultTitle);
+    addConfigChoiceButtons();
+  };
 
   // Add the elements to the form
   form.appendChild(player1Label);
@@ -104,14 +112,29 @@ const Spot = (spotDiv) => {
   const getSpotDiv = () => spotDiv;
   let isChecked = false;
 
+  const getStatus = () => isChecked;
+
+  let currentMark = '';
+
+  const getMark = () => currentMark;
+
   const mark = (markSign) => {
     if (isChecked) return false;
     spotDiv.appendChild(createMarkSpan(spotDiv, markSign));
     isChecked = true;
+    currentMark = markSign;
     return true;
   };
 
-  return { getSpotDiv, isChecked, mark };
+  const unmark = () => {
+    spotDiv.removeChild(spotDiv.firstChild);
+    isChecked = false;
+    currentMark = '';
+  };
+
+  return {
+    getSpotDiv, getStatus, mark, unmark, getMark,
+  };
 };
 
 function getSpotDivs() {
@@ -131,76 +154,81 @@ const gameBoard = (() => {
   const spots = getSpotDivs();
   const getSpots = () => spots;
 
-  const winCombos = [[0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
+  const winningCombos = [[0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
     [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
     [0, 4, 8], [2, 4, 6], // diagonals
   ];
 
   const checkForWin = (mark) => {
-    for (const combo of winCombos) {
-      if (spots[combo[0]].isChecked
-        && spots[combo[1]].isChecked
-        && spots[combo[2]].isChecked
-        && spots[combo[0]].getMark() === mark
-        && spots[combo[1]].getMark() === mark
-        && spots[combo[2]].getMark() === mark) {
+    for (const combo of winningCombos) {
+      if (spots[combo[0]].getMark() === mark
+          && spots[combo[1]].getMark() === mark
+          && spots[combo[2]].getMark() === mark) {
         return true;
       }
     }
-
     return false;
   };
 
   const isBoardFull = () => {
     for (const spot of spots) {
-      if (!spot.isChecked) {
+      if (!spot.getStatus()) {
         return false;
       }
     }
     return true;
   };
 
-  return { getSpots, checkForWin, isBoardFull };
+  const resetBoard = (handler) => {
+    spots.forEach((spot) => {
+      spot.unmark();
+      spot.getSpotDiv().removeEventListener('click', handler);
+    });
+  };
+
+  return {
+    getSpots, checkForWin, isBoardFull, resetBoard,
+  };
 })();
 
 const player1Mark = 'X';
 const player2Mark = 'O';
 
 const game = (() => {
-  let turnCounter = 1;
+  let player1;
+  let player2;
+  let currentPlayer;
 
-  const player1 = Player('player1', player1Mark);
-  const player2 = Player('player2', player2Mark);
-  let currentPlayer = player1;
+  const startGame = () => {
+    player1 = Player('player1', player1Mark);
+    player2 = Player('player2', player2Mark);
+    currentPlayer = player1;
 
-  let played = false;
-  let gameLoopId;
+    gameBoard.getSpots().forEach((spot) => spot.getSpotDiv().addEventListener('click', () => handleTurn(spot)));
+  };
 
-  gameBoard.getSpots().forEach((spot) => spot.getSpotDiv().addEventListener('click', () => {
-    played = spot.mark(currentPlayer.getMark());
-  }));
+  const handleTurn = (spot) => {
+    const mark = currentPlayer.getMark();
+    const played = spot.mark(mark);
 
-  function gameLoop() {
-    if (played === true) {
-      if (gameBoard.checkForWin(currentPlayer.getMark())) {
-        alert(`${currentPlayer.getMark()} wins!`);
-        return;
-      } if (gameBoard.isBoardFull()) {
-        alert("It's a tie!");
-        return;
-      }
+    if (played === false) return;
 
-      turnCounter++;
-      played = false;
-      currentPlayer = turnCounter % 2 === 0 ? player2 : player1;
+    if (gameBoard.checkForWin(mark)) {
+      alert(`${currentPlayer} wins!`);
+      restartGame();
+      return;
     }
 
-    if (turnCounter < 10) {
-      gameLoopId = setTimeout(gameLoop, 0);
-    } else {
-      clearTimeout(gameLoopId);
+    if (gameBoard.isBoardFull()) {
+      alert("It's a tie!");
+      restartGame();
+      return;
     }
-  }
 
-  gameLoop();
+    currentPlayer = (currentPlayer === player1) ? player2 : player1;
+  };
+
+  const restartGame = () => gameBoard.resetBoard(handleTurn);
+
+  return { startGame };
 })();

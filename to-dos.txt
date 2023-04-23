@@ -1,2 +1,4 @@
-- Fix checking for win logic in that for loop with the combos
--> have to use data-number attribute of the spotDivs for checking
+- What happens when the start button is pressed?
+-> spot divs are clickable
+-> depending on whose turn it is, it is marked as "X" or "O"
+-> after every marking, it checks for win or tie, and then sets new current player
