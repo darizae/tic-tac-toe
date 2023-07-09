@@ -47,7 +47,7 @@ function replaceConfigChoice() {
   const goBackButton = document.createElement('button');
   goBackButton.setAttribute('id', 'go-back');
   goBackButton.innerText = 'Go Back';
-  goBackButton.addEventListener('click', () => removeForm);
+  goBackButton.addEventListener('click', () => removeForm());
 
   // Create the 'Start Game' button
   const startGameButton = document.createElement('button');
@@ -57,7 +57,7 @@ function replaceConfigChoice() {
   startGameButton.addEventListener('click', (event) => {
     event.preventDefault();
     removeForm();
-    game.startGame();
+    game.startGame(player1Input.value, player2Input.value);
   });
 
   const removeForm = () => {
@@ -199,9 +199,9 @@ const game = (() => {
   let player2;
   let currentPlayer;
 
-  const startGame = () => {
-    player1 = Player('player1', player1Mark);
-    player2 = Player('player2', player2Mark);
+  const startGame = (playerOneName, playerTwoName) => {
+    player1 = Player(playerOneName, player1Mark);
+    player2 = Player(playerTwoName, player2Mark);
     currentPlayer = player1;
 
     gameBoard.getSpots().forEach((spot) => spot.getSpotDiv().addEventListener('click', () => handleTurn(spot)));
@@ -214,8 +214,9 @@ const game = (() => {
     if (played === false) return;
 
     if (gameBoard.checkForWin(mark)) {
-      alert(`${currentPlayer} wins!`);
-      restartGame();
+      changeTitle(`${currentPlayer.getName()} wins!`);
+      confetti();
+      // restartGame();
       return;
     }
 

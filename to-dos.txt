@@ -1,4 +1,6 @@
-- What happens when the start button is pressed?
--> spot divs are clickable
--> depending on whose turn it is, it is marked as "X" or "O"
--> after every marking, it checks for win or tie, and then sets new current player
+What happens when game starts?
+-> Change title to which player's turn is it
+-> Remove all possible buttons unrelated to the game
+
+What happens when game is won?
+-> Button to reset game (same players, if total restart is wanted, reload the page, indicate this)
