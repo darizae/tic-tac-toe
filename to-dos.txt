@@ -1,6 +1,11 @@
-What happens when game starts?
--> Change title to which player's turn is it
--> Remove all possible buttons unrelated to the game
+What happens when a game is won or there is a tie?
+-> Clicking the board game's spots doesn't do anything
 
-What happens when game is won?
--> Button to reset game (same players, if total restart is wanted, reload the page, indicate this)
+What happens when "Play Again" is clicked?
+-> Play Again button is hidden 
+-> Board is cleared of marks
+-> Game starts -> currentPlayer is the one who won the previous game
+
+
+Backlog
+- Make form prettier

@@ -6,6 +6,7 @@
 const configChoiceDiv = document.getElementById('config-choice');
 const againstPlayerBtn = document.getElementById('against-player');
 const againstMachineBtn = document.getElementById('against-machine');
+const playAgainButton = document.getElementById('restart-game');
 
 const defaultTitle = document.getElementById('title-header').textContent;
 const enterNamesTitle = 'Enter your names:';
@@ -18,6 +19,19 @@ againstPlayerBtn.addEventListener('click', () => {
   changeTitle(enterNamesTitle);
   replaceConfigChoice();
 });
+
+function hideButtons() {
+  againstPlayerBtn.style.display = 'none';
+  againstMachineBtn.style.display = 'none';
+}
+
+function showButtons() {
+  againstPlayerBtn.style.display = 'block';
+  againstMachineBtn.style.display = 'block';
+}
+
+const hidePlayAgainButton = () => { playAgainButton.style.display = 'none'; };
+const showPlayAgainButton = () => { playAgainButton.style.display = 'block'; };
 
 function replaceConfigChoice() {
   // Remove the buttons
@@ -85,6 +99,7 @@ function addConfigChoiceButtons() {
   // Add the buttons to the config-choice div
   configChoiceDiv.appendChild(againstPlayerBtn);
   configChoiceDiv.appendChild(againstMachineBtn);
+  configChoiceDiv.appendChild(playAgainButton);
 }
 
 const Player = (name, mark) => {
@@ -127,7 +142,8 @@ const Spot = (spotDiv) => {
   };
 
   const unmark = () => {
-    spotDiv.removeChild(spotDiv.firstChild);
+    const markNodes = spotDiv.querySelectorAll('.mark');
+    markNodes.forEach((node) => node.remove());
     isChecked = false;
     currentMark = '';
   };
@@ -182,7 +198,7 @@ const gameBoard = (() => {
   const resetBoard = (handler) => {
     spots.forEach((spot) => {
       spot.unmark();
-      spot.getSpotDiv().removeEventListener('click', handler);
+      // spot.getSpotDiv().removeEventListener('click', handler);
     });
   };
 
@@ -205,6 +221,8 @@ const game = (() => {
     currentPlayer = player1;
 
     gameBoard.getSpots().forEach((spot) => spot.getSpotDiv().addEventListener('click', () => handleTurn(spot)));
+    updateCurrentPlayerTitle(currentPlayer);
+    hideButtons();
   };
 
   const handleTurn = (spot) => {
@@ -214,22 +232,31 @@ const game = (() => {
     if (played === false) return;
 
     if (gameBoard.checkForWin(mark)) {
-      changeTitle(`${currentPlayer.getName()} wins!`);
+      // eslint-disable-next-line no-undef
       confetti();
-      // restartGame();
+      changeTitle(`${currentPlayer.getName()} wins!`);
+      showPlayAgainButton();
       return;
     }
 
     if (gameBoard.isBoardFull()) {
-      alert("It's a tie!");
-      restartGame();
+      changeTitle("It's a tie!");
+      showPlayAgainButton();
       return;
     }
 
     currentPlayer = (currentPlayer === player1) ? player2 : player1;
+    updateCurrentPlayerTitle(currentPlayer);
   };
 
-  const restartGame = () => gameBoard.resetBoard(handleTurn);
+  const updateCurrentPlayerTitle = (player) => changeTitle(`It's ${player.getName()}'s turn`);
+
+  const restartGame = () => {
+    hidePlayAgainButton();
+    gameBoard.resetBoard(handleTurn);
+  };
+
+  playAgainButton.addEventListener('click', restartGame);
 
   return { startGame };
 })();
