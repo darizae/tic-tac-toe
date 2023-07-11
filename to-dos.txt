@@ -1,9 +1,5 @@
-What happens when a game is won or there is a tie?
--> Clicking the board game's spots doesn't do anything
-
 What happens when "Play Again" is clicked?
--> Play Again button is hidden 
--> Board is cleared of marks
+-> Clear board (issue with spot div references, because the spot div is being replaced by a different object)
 -> Game starts -> currentPlayer is the one who won the previous game
 
 

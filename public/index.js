@@ -142,8 +142,9 @@ const Spot = (spotDiv) => {
   };
 
   const unmark = () => {
-    const markNodes = spotDiv.querySelectorAll('.mark');
-    markNodes.forEach((node) => node.remove());
+    while (spotDiv.firstChild) {
+      spotDiv.firstChild.remove();
+    }
     isChecked = false;
     currentMark = '';
   };
@@ -195,10 +196,9 @@ const gameBoard = (() => {
     return true;
   };
 
-  const resetBoard = (handler) => {
+  const resetBoard = () => {
     spots.forEach((spot) => {
       spot.unmark();
-      // spot.getSpotDiv().removeEventListener('click', handler);
     });
   };
 
@@ -220,12 +220,24 @@ const game = (() => {
     player2 = Player(playerTwoName, player2Mark);
     currentPlayer = player1;
 
-    gameBoard.getSpots().forEach((spot) => spot.getSpotDiv().addEventListener('click', () => handleTurn(spot)));
+    makeSpotsClickable(true);
     updateCurrentPlayerTitle(currentPlayer);
     hideButtons();
   };
 
-  const handleTurn = (spot) => {
+  const makeSpotsClickable = (val) => {
+    if (val) {
+      gameBoard.getSpots().forEach((spot) => spot.getSpotDiv().addEventListener('click', () => handleTurn(spot)));
+    } else {
+      gameBoard.getSpots().forEach((spot) => {
+        const currentSpot = spot.getSpotDiv();
+        const clonedSpot = currentSpot.cloneNode(true);
+        currentSpot.replaceWith(clonedSpot);
+      });
+    }
+  };
+
+  function handleTurn(spot) {
     const mark = currentPlayer.getMark();
     const played = spot.mark(mark);
 
@@ -236,27 +248,29 @@ const game = (() => {
       confetti();
       changeTitle(`${currentPlayer.getName()} wins!`);
       showPlayAgainButton();
+      makeSpotsClickable(false);
       return;
     }
 
     if (gameBoard.isBoardFull()) {
       changeTitle("It's a tie!");
       showPlayAgainButton();
+      makeSpotsClickable(false);
       return;
     }
 
     currentPlayer = (currentPlayer === player1) ? player2 : player1;
     updateCurrentPlayerTitle(currentPlayer);
-  };
+  }
 
   const updateCurrentPlayerTitle = (player) => changeTitle(`It's ${player.getName()}'s turn`);
 
   const restartGame = () => {
     hidePlayAgainButton();
-    gameBoard.resetBoard(handleTurn);
+    gameBoard.resetBoard();
   };
 
-  playAgainButton.addEventListener('click', restartGame);
+  playAgainButton.addEventListener('click', () => restartGame());
 
   return { startGame };
 })();
