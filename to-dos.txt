@@ -1,7 +1,0 @@
-What happens when "Play Again" is clicked?
--> Clear board (issue with spot div references, because the spot div is being replaced by a different object)
--> Game starts -> currentPlayer is the one who won the previous game
-
-
-Backlog
-- Make form prettier

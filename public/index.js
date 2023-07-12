@@ -154,22 +154,20 @@ const Spot = (spotDiv) => {
   };
 };
 
-function getSpotDivs() {
-  const spotDivs = Array.from(document.querySelectorAll('div.spot'));
-  const spots = [];
+const GameBoard = () => {
+  const getSpotDivs = () => Array.from(document.querySelectorAll('div.spot'));
 
-  spotDivs.forEach((spotDiv) => {
-    spotDiv.classList.add('flex-centered');
-    const spot = Spot(spotDiv);
-    spots.push(spot);
-  });
+  const createSpotObjects = () => {
+    const spots = [];
+    getSpotDivs().forEach((spotDiv) => {
+      spotDiv.classList.add('flex-centered');
+      const spot = Spot(spotDiv);
+      spots.push(spot);
+    });
+    return spots;
+  };
 
-  return spots;
-}
-
-const gameBoard = (() => {
-  const spots = getSpotDivs();
-  const getSpots = () => spots;
+  const spots = createSpotObjects();
 
   const winningCombos = [[0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
     [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
@@ -203,9 +201,9 @@ const gameBoard = (() => {
   };
 
   return {
-    getSpots, checkForWin, isBoardFull, resetBoard,
+    spots, checkForWin, isBoardFull, resetBoard,
   };
-})();
+};
 
 const player1Mark = 'X';
 const player2Mark = 'O';
@@ -214,12 +212,18 @@ const game = (() => {
   let player1;
   let player2;
   let currentPlayer;
+  let nonCurrentPlayer;
+  let gameBoard;
+  let winner;
+  let loser;
 
   const startGame = (playerOneName, playerTwoName) => {
     player1 = Player(playerOneName, player1Mark);
     player2 = Player(playerTwoName, player2Mark);
     currentPlayer = player1;
+    nonCurrentPlayer = player2;
 
+    gameBoard = GameBoard();
     makeSpotsClickable(true);
     updateCurrentPlayerTitle(currentPlayer);
     hideButtons();
@@ -227,9 +231,9 @@ const game = (() => {
 
   const makeSpotsClickable = (val) => {
     if (val) {
-      gameBoard.getSpots().forEach((spot) => spot.getSpotDiv().addEventListener('click', () => handleTurn(spot)));
+      gameBoard.spots.forEach((spot) => spot.getSpotDiv().addEventListener('click', () => handleTurn(spot)));
     } else {
-      gameBoard.getSpots().forEach((spot) => {
+      gameBoard.spots.forEach((spot) => {
         const currentSpot = spot.getSpotDiv();
         const clonedSpot = currentSpot.cloneNode(true);
         currentSpot.replaceWith(clonedSpot);
@@ -249,6 +253,8 @@ const game = (() => {
       changeTitle(`${currentPlayer.getName()} wins!`);
       showPlayAgainButton();
       makeSpotsClickable(false);
+      winner = currentPlayer;
+      loser = nonCurrentPlayer;
       return;
     }
 
@@ -256,6 +262,8 @@ const game = (() => {
       changeTitle("It's a tie!");
       showPlayAgainButton();
       makeSpotsClickable(false);
+      winner = currentPlayer;
+      loser = nonCurrentPlayer;
       return;
     }
 
@@ -267,7 +275,10 @@ const game = (() => {
 
   const restartGame = () => {
     hidePlayAgainButton();
+    gameBoard = GameBoard();
     gameBoard.resetBoard();
+
+    startGame(winner.getName(), loser.getName());
   };
 
   playAgainButton.addEventListener('click', () => restartGame());
